@@ -1,20 +1,32 @@
 {
-  "name": "back_loncheria",
+  "name": "apiforandroid",
   "version": "1.0.0",
-  "main": "app.js",
+  "description": "This project will contain an API as a test ",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch src --exec node src/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chuynor/BACK_LONCHERIA.git"
+    "url": "git+https://github.com/Isaac4023/apiForAndroid.git"
   },
-  "keywords": [],
-  "author": "",
+  "author": "isaac",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/chuynor/BACK_LONCHERIA/issues"
+    "url": "https://github.com/Isaac4023/apiForAndroid/issues"
   },
-  "homepage": "https://github.com/chuynor/BACK_LONCHERIA#readme",
-  "description": ""
+  "homepage": "https://github.com/Isaac4023/apiForAndroid#readme",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.37.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2"
+  }
 }
