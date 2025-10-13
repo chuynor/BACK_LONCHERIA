@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Isaac4023/apiForAndroid.git"
+    "url": "git+https://github.com/chuynor/BACK_LONCHERIA.git"
   },
   "author": "isaac",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Isaac4023/apiForAndroid/issues"
+    "url": "https://github.com/chuynor/BACK_LONCHERIA/issues"
   },
-  "homepage": "https://github.com/Isaac4023/apiForAndroid#readme",
+  "homepage": "https://github.com/chuynor/BACK_LONCHERIA#readme",
   "type": "module",
   "dependencies": {
     "cors": "^2.8.5",
