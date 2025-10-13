@@ -1,0 +1,1 @@
+URL=`mongodb+srv://${PROCESS.ENV.USR}:${PROCESS.ENV.PASS}@${PROCESS.ENV.CLUSTER}/?retryWrites=true&w=majority&appName=utrTest`
