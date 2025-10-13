@@ -1,7 +1,7 @@
 {
-  "name": "apiforandroid",
+  "name": "back_loncheria",
   "version": "1.0.0",
-  "description": "This project will contain an API as a test ",
+  "description": "This project will be a store ",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
