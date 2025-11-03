@@ -1,3 +1,4 @@
+//productos.service.js
 import Producto from '../models/productos.model.js';
 
 export const crearProducto = async (data) => {

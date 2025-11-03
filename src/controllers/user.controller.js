@@ -1,12 +1,8 @@
+//user.controller.js
 import * as usuarioService from '../services/user.service.js';
 
 export const registrar = async (req, res) => {
   try {
-    const appToken = req.headers['x-app-token'];
-    if (!usuarioService.verificarAppToken(appToken)) {
-      return res.status(403).json({ mensaje: 'Token de aplicación inválido' });
-    }
-
     const usuario = await usuarioService.registrarUsuario(req.body);
     res.status(201).json({ mensaje: 'Usuario registrado', usuario });
   } catch (error) {
@@ -16,11 +12,6 @@ export const registrar = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const appToken = req.headers['x-app-token'];
-    if (!usuarioService.verificarAppToken(appToken)) {
-      return res.status(403).json({ mensaje: 'Token de aplicación inválido' });
-    }
-
     const { email, password } = req.body;
     const { usuario, token } = await usuarioService.loginUsuario(email, password);
 

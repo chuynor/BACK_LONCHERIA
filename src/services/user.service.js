@@ -1,9 +1,10 @@
+//user.service.js
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Usuario from '../models/user.model.js';
 
 const JWT_SECRET = process.env.JWT_TOKEN_SECRET || 'secretousuariotoken';
-const APP_TOKEN = process.env.APP_TOKEN || 'tokenDeApp123';
+const APP_TOKEN = process.env.APP_TOKEN; // Eliminamos el valor por defecto
 
 export const registrarUsuario = async (data) => {
   const { nombre, email, password, rol } = data;
