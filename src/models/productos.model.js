@@ -16,11 +16,11 @@ const productoSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  categoria: {
-    type: String,
-    enum: ['bebida', 'comida', 'postre', 'otro'],
-    default: 'otro'
-  },
+ categoria: {
+  type: String,
+  enum: ['tortas', 'quesadillas', 'sandwiches', 'chocos', 'jugos'],
+  required: true
+},
   disponible: {
     type: Boolean,
     default: true
