@@ -14,7 +14,9 @@ dotenv.config();
 export function buildApp() {
   const app = express();
 
-  app.use(cors());
+  app.use(cors(
+    {origin:'http://localhost:5173',allowedHeaders: ['Content-Type', 'Authorization','x-app-token','ngrok-skip-browser-warning'],}
+  ));
   app.use(express.json());
 
   const mongoURI = `mongodb+srv://${process.env.USR}:${process.env.PASS}@${process.env.CLUSTER}/loncheria?retryWrites=true&w=majority`;
@@ -30,7 +32,7 @@ export function buildApp() {
   app.use('/api/usuarios', usuarioRoutes);
 
   // Rutas protegidas (productos)
-  app.use('/api/productos', authApp, authUser, productoRoutes);
+  app.use('/api/productos', productoRoutes);
 
   // Ruta no encontrada
   app.use((req, res) => {
