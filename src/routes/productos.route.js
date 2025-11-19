@@ -1,4 +1,3 @@
-//productos.route.js
 import express from 'express';
 import * as productoController from '../controllers/productos.controller.js';
 import { authApp } from '../middlewares/authApp.js'; // Importamos authApp
