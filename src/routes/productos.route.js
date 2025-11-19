@@ -12,5 +12,7 @@ router.get('/', authApp, productoController.obtenerProductos);
 router.get('/:id', authApp, productoController.obtenerProductoPorId);
 router.put('/:id', authApp, authUser, productoController.actualizarProducto);
 router.delete('/:id', authApp, authUser, productoController.eliminarProducto);
+// Venta: procesar venta y descontar ingredientes (autenticación de la app)
+router.post('/:id/vender', authApp, productoController.venderProducto);
 
 export default router;
