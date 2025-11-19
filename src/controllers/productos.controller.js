@@ -1,4 +1,4 @@
-//productos.controller.js
+
 import * as productoService from '../services/productos.service.js';
 
 export const crearProducto = async (req, res) => {

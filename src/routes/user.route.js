@@ -1,4 +1,3 @@
-//user.route.js
 import express from 'express';
 import * as usuarioController from '../controllers/user.controller.js';
 import { authApp } from '../middlewares/authApp.js'; // Importamos el middleware

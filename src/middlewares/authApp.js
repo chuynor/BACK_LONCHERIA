@@ -1,4 +1,4 @@
-// middlewares/authApp.js
+
 export const authApp = (req, res, next) => {
   const token = req.headers['x-app-token'];
   console.log('Token recibido:', token); //  prueba

@@ -1,4 +1,4 @@
-//user.controller.js
+
 import * as usuarioService from '../services/user.service.js';
 
 export const registrar = async (req, res) => {
