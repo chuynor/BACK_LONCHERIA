@@ -4,22 +4,10 @@ import Producto from '../models/productos.model.js';
 import Ingrediente from '../models/ingredientes.model.js';
 
 // CRUD básico productos
-
-// Al crear un producto, los ingredientes deben ser [{ ingrediente: ObjectId, cantidad, unidad }]
 export const crearProducto = async (payload) => {
-    // Validar que los ingredientes existan y transformar si es necesario
-    if (payload.ingredientes && Array.isArray(payload.ingredientes)) {
-        for (const item of payload.ingredientes) {
-            // Si el ingrediente es un objeto con id, lo dejamos, si es string, lo convertimos
-            if (item.ingrediente && typeof item.ingrediente === 'object' && item.ingrediente._id) {
-                item.ingrediente = item.ingrediente._id;
-            }
-        }
-    }
     const producto = new Producto(payload);
     return await producto.save();
 };
-
 
 export const obtenerProductos = async (filtros = {}, opciones = {}) => {
     const { limit = 50, skip = 0, sort = { createdAt: -1 }, populate = false } = opciones;
@@ -28,26 +16,15 @@ export const obtenerProductos = async (filtros = {}, opciones = {}) => {
     return await query.lean();
 };
 
-
 export const obtenerProductoPorId = async (id, populate = false) => {
     let q = Producto.findById(id);
     if (populate) q = q.populate('ingredientes.ingrediente');
     return await q.lean();
 };
 
-
 export const actualizarProducto = async (id, cambios) => {
-    // Si se actualizan ingredientes, asegurarse de que son referencias
-    if (cambios.ingredientes && Array.isArray(cambios.ingredientes)) {
-        for (const item of cambios.ingredientes) {
-            if (item.ingrediente && typeof item.ingrediente === 'object' && item.ingrediente._id) {
-                item.ingrediente = item.ingrediente._id;
-            }
-        }
-    }
     return await Producto.findByIdAndUpdate(id, cambios, { new: true });
 };
-
 
 export const eliminarProducto = async (id) => {
     return await Producto.findByIdAndDelete(id);
@@ -65,7 +42,6 @@ export const eliminarProducto = async (id) => {
  * - Recalcula disponibilidad del producto (si algún ingrediente queda por debajo de lo necesario).
  * - Commit / abort según corresponda.
  */
-
 export const procesarVenta = async (productoId, cantidadVendida = 1) => {
     if (cantidadVendida <= 0) throw new Error('cantidadVendida debe ser mayor a 0');
 
@@ -76,6 +52,7 @@ export const procesarVenta = async (productoId, cantidadVendida = 1) => {
         const producto = await Producto.findById(productoId).populate('ingredientes.ingrediente').session(session);
         if (!producto) throw new Error('Producto no encontrado');
 
+        // Si producto no está disponible, bloquear venta
         if (!producto.disponible) throw new Error('Producto no disponible para la venta');
 
         // Verificar stock de cada ingrediente
@@ -88,7 +65,7 @@ export const procesarVenta = async (productoId, cantidadVendida = 1) => {
             }
         }
 
-        // Descontar stock de cada ingrediente (usando la lógica de ingredientes.service.js)
+        // Descontar stock de cada ingrediente
         for (const item of producto.ingredientes) {
             const necesario = item.cantidad * cantidadVendida;
             const res = await Ingrediente.findOneAndUpdate(
