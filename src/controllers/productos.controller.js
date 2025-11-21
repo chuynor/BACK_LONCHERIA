@@ -75,3 +75,25 @@ export const eliminarProducto = async (req, res) => {
     res.status(500).json({ mensaje: error.message });
   }
 };
+
+export const venderProducto = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cantidad = Number(req.body.cantidad || 1);
+    if (!Number.isFinite(cantidad) || cantidad <= 0) {
+      return res.status(400).json({ mensaje: 'cantidad debe ser un número mayor a 0' });
+    }
+
+    const result = await productoService.procesarVenta(id, cantidad);
+    return res.status(200).json(result);
+  } catch (err) {
+    const msg = err.message || 'Error al procesar venta';
+    if (msg.toLowerCase().includes('no encontrado')) {
+      return res.status(404).json({ mensaje: msg });
+    }
+    if (msg.toLowerCase().includes('insuficiente') || msg.toLowerCase().includes('no disponible')) {
+      return res.status(400).json({ mensaje: msg });
+    }
+    return res.status(500).json({ mensaje: msg });
+  }
+};
