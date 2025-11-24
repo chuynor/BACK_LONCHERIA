@@ -6,7 +6,6 @@ const ingredienteSchema = new mongoose.Schema({
   unidad: { type: String, enum: ['kg', 'l'], required: true, default: 'kg' },
   // cantidad en la unidad indicada (ej: 2.5 -> 2.5 kg o 1.5 -> 1.5 l)
   cantidad: { type: Number, required: true, min: 0 },
-  descripcion: { type: String, trim: true }
 }, { timestamps: true });
 
 const Ingrediente = mongoose.model('Ingrediente', ingredienteSchema);
