@@ -5,9 +5,10 @@ import dotenv from 'dotenv';
 
 import productoRoutes from './routes/productos.route.js';
 import usuarioRoutes from './routes/user.route.js';
+import ingredienteRoutes from './routes/ingredientes.route.js';
 
 import { authApp } from './middlewares/authApp.js';
-import { authUser } from './middlewares/authUsers.js';
+
 
 dotenv.config();
 
@@ -28,11 +29,9 @@ export function buildApp() {
     .then(() => console.log(' Conectado a MongoDB Atlas'))
     .catch(err => console.error(' Error al conectar a MongoDB:', err));
 
-  // Rutas públicas (usuarios)
-  app.use('/api/usuarios', usuarioRoutes);
-
-  // Rutas protegidas (productos)
-  app.use('/api/productos', productoRoutes);
+  app.use('/api/usuarios', authApp , usuarioRoutes);
+  app.use('/api/productos', authApp , productoRoutes);
+  app.use('/api/ingredientes', authApp , ingredienteRoutes);
 
   // Ruta no encontrada
   app.use((req, res) => {

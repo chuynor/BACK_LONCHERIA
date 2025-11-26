@@ -1,24 +1,43 @@
+//productos.controller.js
 import * as productoService from '../services/productos.service.js';
-import mongoose from 'mongoose';
-// Modelo temporal para validar existencia de ingredientes por nombre
-const Ingrediente = mongoose.models.Ingrediente || mongoose.model('Ingrediente', new mongoose.Schema({ nombre: String }, { collection: 'ingredientes' }));
+import Ingrediente from '../models/ingredientes.model.js';
 
-// Valida que los ingredientes tengan estructura y existan en la base de datos por nombre
+/**
+ * Valida que los ingredientes enviados tengan la estructura esperada:
+ * - arreglo no vacío
+ * - cada item: { ingrediente: ObjectId|string, cantidad: number > 0 }
+ * - que todos los ingredientes existan en la colección Ingrediente
+ * - evita duplicados de ingrediente en el mismo producto
+ */
 const validarIngredientes = async (ingredientes) => {
-  if (!Array.isArray(ingredientes)) return;
+  if (!Array.isArray(ingredientes) || ingredientes.length === 0) {
+    throw new Error('Se requiere un arreglo de ingredientes no vacío');
+  }
+
+  const ids = [];
   for (const item of ingredientes) {
-    if (!item.nombre || typeof item.nombre !== 'string') {
-      throw new Error('Cada ingrediente debe tener un campo nombre (string)');
+    if (!item || (typeof item !== 'object')) {
+      throw new Error('Cada ingrediente debe ser un objeto con { ingrediente, cantidad }');
+    }
+    if (!item.ingrediente) {
+      throw new Error('Cada ingrediente debe incluir el campo "ingrediente" con el id del ingrediente');
     }
     if (typeof item.cantidad !== 'number' || item.cantidad <= 0) {
-      throw new Error(`El ingrediente ${item.nombre} debe tener una cantidad numérica mayor a 0`);
+      throw new Error('Cada ingrediente debe incluir "cantidad" numérica mayor a 0');
     }
-    if (!item.unidad || typeof item.unidad !== 'string') {
-      throw new Error(`El ingrediente ${item.nombre} debe tener una unidad válida`);
-    }
-    // Verifica que el ingrediente exista en la base de datos por nombre
-    const existe = await Ingrediente.findOne({ nombre: item.nombre });
-    if (!existe) throw new Error(`Ingrediente no encontrado en la base de datos: ${item.nombre}`);
+    ids.push(item.ingrediente.toString());
+  }
+
+  // detectar duplicados
+  const uniqueIds = Array.from(new Set(ids));
+  if (uniqueIds.length !== ids.length) {
+    throw new Error('No se permiten ingredientes duplicados en la lista del producto');
+  }
+
+  // verificar existencia en DB
+  const count = await Ingrediente.countDocuments({ _id: { $in: uniqueIds } });
+  if (count !== uniqueIds.length) {
+    throw new Error('Uno o más ingredientes referenciados no existen');
   }
 };
 
@@ -26,7 +45,11 @@ export const crearProducto = async (req, res) => {
   try {
     if (req.body.ingredientes) {
       await validarIngredientes(req.body.ingredientes);
+    } else {
+      // exigir ingredientes según requerimiento
+      return res.status(400).json({ mensaje: 'El producto debe contener al menos un ingrediente' });
     }
+
     const producto = await productoService.crearProducto(req.body);
     res.status(201).json(producto);
   } catch (error) {
@@ -36,7 +59,9 @@ export const crearProducto = async (req, res) => {
 
 export const obtenerProductos = async (req, res) => {
   try {
-    const productos = await productoService.obtenerProductos();
+    // opcional: permitir ?populate=true para devolver ingredientes poblados
+    const populate = req.query.populate === 'true';
+    const productos = await productoService.obtenerProductos({}, { populate });
     res.json(productos);
   } catch (error) {
     res.status(500).json({ mensaje: error.message });
@@ -45,7 +70,8 @@ export const obtenerProductos = async (req, res) => {
 
 export const obtenerProductoPorId = async (req, res) => {
   try {
-    const producto = await productoService.obtenerProductoPorId(req.params.id);
+    const populate = req.query.populate === 'true';
+    const producto = await productoService.obtenerProductoPorId(req.params.id, populate);
     if (!producto) return res.status(404).json({ mensaje: 'Producto no encontrado' });
     res.json(producto);
   } catch (error) {

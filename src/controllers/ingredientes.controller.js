@@ -1,3 +1,4 @@
+//ingrdienetes.controller.js
 import * as ingredienteService from '../services/ingredientes.service.js';
 
 export const crearIngrediente = async (req, res) => {
