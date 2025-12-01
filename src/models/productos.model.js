@@ -1,25 +1,5 @@
 import mongoose from 'mongoose';
 
-// Schema para ingredientes
-const ingredienteSchema = new mongoose.Schema({
-  nombre: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  cantidad: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  unidad: {
-    type: String,
-    required: true,
-    enum: ['kg', 'l', 'unidad'],
-    default: 'unidad'
-  }
-});
-
 const productoSchema = new mongoose.Schema({
   nombre: {
     type: String,
@@ -48,16 +28,22 @@ const productoSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  ingredientes: [ingredienteSchema]
+  // ✅ INGREDIENTES COMO REFERENCIAS SEPARADAS
+  ingredientes: [{
+    ingrediente: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Ingrediente',  // Referencia a la colección separada
+      required: true
+    },
+    cantidad: {
+      type: Number,
+      required: true,
+      min: 0
+    }
+  }]
 }, { 
   timestamps: true 
 });
 
 const Producto = mongoose.model('Producto', productoSchema);
 export default Producto;
-
-
-
-
-
-
