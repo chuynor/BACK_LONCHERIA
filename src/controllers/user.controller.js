@@ -14,10 +14,10 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const { usuario, token } = await usuarioService.loginUsuario(email, password);
-
+    console.log("token °°°°°°°°°°°°°°°°°°°°°°°°°°°:", token); // prueba
     res.json({
       mensaje: 'Inicio de sesión exitoso',
-      usuario: { id: usuario._id, nombre: usuario.nombre, email: usuario.email },
+      usuario: { id: usuario._id, nombre: usuario.nombre, email: usuario.email, rol: usuario.rol},
       token
     });
   } catch (error) {

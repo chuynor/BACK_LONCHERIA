@@ -30,6 +30,7 @@ export const loginUsuario = async (email, password) => {
     JWT_SECRET,
     { expiresIn: '8h' }
   );
+  console.log("usuario logueado:", usuario); // prueba
 
   return { usuario, token };
 };
